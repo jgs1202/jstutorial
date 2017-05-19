@@ -2,7 +2,7 @@ var cv = document.getElementById("cv").getContext("2d");
 var ctx = document.getElementById("cv").getContext("2d");
 
 
-setInterval("reload()",980);
+setInterval("reload()",995);
 
 
 function reload() {
