@@ -1,13 +1,22 @@
+select = document.getElementById('mode')
+
 var cv = document.getElementById("cv").getContext("2d");
 var ctx = document.getElementById("cv").getContext("2d");
+var Timer;
 
+function Click(arg1){
+  console.log(select.selectedIndex);
+  switch(select.selectedIndex){
+    case 0:Timer = setInterval('reload()', 995); console.log("case1です。"); break;
+    case 1:cv.clearRect(0, 0, 1000, 600); clearInterval(Timer); console.log("case2です。"); break;
+    case 2:cv.clearRect(0, 0, 1000, 600); clearInterval(Timer); console.log("case3です。"); break;
+  }
+}
 
-setInterval("reload()",995);
-
-
+//ここからreload関数
 function reload() {
+  console.log("関数reloadが実行されました。")
   cv.clearRect(0,0,1000,600);
-  //日付を代入、仮にここ
   //文字盤を描写
   var i = 0;
   var txt = 0;
@@ -25,11 +34,8 @@ function reload() {
   cv.lineWidth = 5
   cv.stroke()
 
-
-  //while(true){}
   // 現在のローカル時間が格納された、Date オブジェクトを作成する
   var date_obj = new Date();
-  console.log(date_obj.toString());
   var sec, min, hour;
   sec = date_obj.getSeconds();
   min = date_obj.getMinutes();
@@ -51,7 +57,6 @@ function reload() {
   cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 1;
   cv.stroke();
-
 
   //AM,PM
   if (hour < 12) {
@@ -77,5 +82,5 @@ function reload() {
   cv.fillStyle = 'white';
   cv.stroke();
   cv.fill();
-
 }
+//ここまでreload関数

@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>時計</title>
-  <link rel="stylesheet" type="text.css" href="ｃlock.css">
+  <link rel="stylesheet" type="text/css" href="ｃlock.css">
 </head>
+
 <body>
+
+  <form style="text-align:center">
+    <p>
+      モード：<select id="mode" name="mode" style="font-size: 100%">
+        <option value="current">現在時刻</option>
+        <option value="inputNumber">数字で時間を入力</option>
+        <option value="inputClock">時計の針を動かす</option>
+      </select>
+      <input type="button" value="変更" onclick="Click(select.selectedIndex);"/>
+    </p>
+  </form>
   <div style="text-align:center">
-  <canvas id="cv" width="1000" height="600"></canvas>
+    <canvas id="cv" width="1000" height="600"></canvas>
   </div>
   <p id="text"></p>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="clock.js"></script>
 </body>
+
 </html>
