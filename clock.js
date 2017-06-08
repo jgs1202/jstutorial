@@ -1,7 +1,8 @@
 select = document.getElementById('mode')
 var cv = document.getElementById("cv").getContext("2d")
 var ctx = document.getElementById("cv").getContext("2d")
-var Timer, sec, min, hour
+var Timer;
+new time[];
 
 function Click() {
   console.log(select.selectedIndex)
@@ -11,15 +12,15 @@ function Click() {
     case 1:
       case1();
       console.log("case1です。");
-      break
+      break;
     case 2:
       case2();
       console.log('case2です。');
-      break
+      break;
     case 3:
       case3();
       console.log("case3です。");
-      break
+      break;
   }
 }
 
@@ -35,10 +36,10 @@ function case2() {
 }
 
 function case3() {
-  hour=10;
-  min=8;
-  sec=36;
-  drawClock(hour,min,sec);
+  time[0]=10;
+  time[1]=8;
+  time[2]=36;
+  drawClock(time[0], time[1], time[2]);
   cv.clearRect(0, 0, 1000, 600)
   clearInterval(Timer)
   document.getElementById("inputForm").style.display = "none"
@@ -53,6 +54,8 @@ function Drug(e) {
     var rect = e.target.getBoundingClientRect();
     x = e.clientX - rect.left;
     y = e.clientY - rect.top;
+    new theta[];
+    new go[]={0,0,0};
     var theta,thetah,thetam,thetas,goh,gom,gos;
     theta = Math.atan{(y-300)/(x-500)};
     thetah = Math.tan(hour/12*2*Math.PI);
