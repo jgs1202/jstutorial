@@ -1,8 +1,9 @@
-select = document.getElementById('mode')
+var select = document.getElementById('mode')
+var cvs = document.getElementById("cv")
 var cv = document.getElementById("cv").getContext("2d")
 var ctx = document.getElementById("cv").getContext("2d")
 var Timer;
-new time[];
+var time = new Array(3);
 
 function Click() {
   console.log(select.selectedIndex)
@@ -34,46 +35,59 @@ function case2() {
   clearInterval(Timer);
   document.getElementById("inputForm").style.display = "block"
 }
+var Timer2;
 
 function case3() {
-  time[0]=10;
-  time[1]=8;
-  time[2]=36;
-  drawClock(time[0], time[1], time[2]);
+  time[0] = 10;
+  time[1] = 8;
+  time[2] = 36;
   cv.clearRect(0, 0, 1000, 600)
   clearInterval(Timer)
+  drawClock(time[0], time[1], time[2]);
   document.getElementById("inputForm").style.display = "none"
-  var x, y, Timer2;
-  cv.addEventListener('mousedown', Drug(), false);
-  cv.addEventListener('mouseup',clearInterval(Timer2), false);
+  cvs.addEventListener('mousedown', Drug, false);
+  cvs.addEventListener('mouseup', Stop, false);
 }
 
-function Drug(e) {
-  Timer2 = setInterval('getCoo()', 50);
-  function getCoo() {
-    var rect = e.target.getBoundingClientRect();
-    x = e.clientX - rect.left;
-    y = e.clientY - rect.top;
-    new theta[];
-    new go[]={0,0,0};
-    var theta,thetah,thetam,thetas,goh,gom,gos;
-    theta = Math.atan{(y-300)/(x-500)};
-    thetah = Math.tan(hour/12*2*Math.PI);
-    thetam = Math.tan(min/60*2*Math.PI);
-    thetas = Math.tan(sec/60*2*Math.PI);
-    if(Math.abs(tan-tanh)<10){
-      goh=1;
+function Drug() {
+  Timer2 = setInterval('getCoo()', 2000);
+  console.log("mousedown")
+}
+
+function Stop() {
+  clearInterval(Timer2);
+  console.log("mouseup")
+}
+
+function getCoo(e) {
+  console.log("getCooを実行");
+  var rect = e.target.getBoundingClientRect();
+  var x, y;
+  x = e.clientX - rect.left;
+  y = e.clientY - rect.top;
+  console.log(`${x},${y}`);
+  var theta = new Array(4);
+  var go = 0;
+  theta[3] = Math.atan((y - 300) / (x - 500));
+  theta[0] = Math.tan(time[0] / 12 * 2 * Math.PI);
+  theta[1] = Math.tan(time[1] / 60 * 2 * Math.PI);
+  theta[2] = Math.tan(time[2] / 60 * 2 * Math.PI);
+  var i;
+  for (i = 0; i < 3; i++) {
+    theta[i] = Math.abs(theta[3] - theta[i]);
+  }
+  for (i = 1; i < 3; i++) {
+    if (theta[i] > theta[go]) {
+      go = i;
     }
-    if(Math.abs(tan-tanm)<10){
-      gom=1;
-    }
-    if(Math.abs(tan-tans)<10){
-      gos=1;
-    }
+  }
+  if (theta[go] < 10) {
+    cv.clearRect(0, 0, 1000, 600);
+    drawClock(time[0], time[1], time[2]);
   }
 }
 
-function drawClock(h,m,s){
+function drawClock(h, m, s) {
   //文字盤を描写
   var i = 0;
   var txt = 0;
@@ -105,7 +119,7 @@ function drawClock(h,m,s){
   cv.stroke();
 
   //AM,PM
-  if (hour < 12) {
+  if (time[0] < 12) {
     txt = 'AM';
   } else {
     txt = 'PM';
@@ -131,10 +145,10 @@ function drawClock(h,m,s){
 }
 
 function toClock() {
-  hour = document.eg.Hour.value
-  min = document.eg.Minute.value
-  sec = document.eg.Second.value
-  console.log(`${hour}時${min}分${sec}秒`)
+  time[0] = document.eg.Hour.value
+  time[1] = document.eg.Minute.value
+  time[2] = document.eg.Second.value
+  console.log(`${time[0]}時${time[1]}分${time[2]}秒`)
   //文字盤を描写
   var i = 0;
   var txt = 0;
@@ -153,23 +167,23 @@ function toClock() {
   cv.stroke()
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 100 * Math.sin((hour / 12 + min / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((hour / 12 + min / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 100 * Math.sin((time[0] / 12 + time[1] / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((time[0] / 12 + time[1] / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 8;
   cv.stroke(); // 4.Canvas上に描画する
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(min / 60 * 2 * Math.PI), 300 - 160 * Math.cos(min / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 160 * Math.sin(time[1] / 60 * 2 * Math.PI), 300 - 160 * Math.cos(time[1] / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 4;
   cv.stroke();
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
   cv.strokeStyle = "red";
-  cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 160 * Math.sin(time[2] / 60 * 2 * Math.PI), 300 - 160 * Math.cos(time[2] / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 1;
   cv.stroke();
 
   //AM,PM
-  if (hour < 12) {
+  if (time[0] < 12) {
     txt = 'AM';
   } else {
     txt = 'PM';
@@ -217,29 +231,29 @@ function reload() {
 
   // 現在のローカル時間が格納された、Date オブジェクトを作成する
   var date_obj = new Date();
-  sec = date_obj.getSeconds();
-  min = date_obj.getMinutes();
-  hour = date_obj.getHours();
+  time[2] = date_obj.getSeconds();
+  time[1] = date_obj.getMinutes();
+  time[0] = date_obj.getHours();
 
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 100 * Math.sin((hour / 12 + min / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((hour / 12 + min / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 100 * Math.sin((time[0] / 12 + time[1] / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((time[0] / 12 + time[1] / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 8;
   cv.stroke(); // 4.Canvas上に描画する
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(min / 60 * 2 * Math.PI), 300 - 160 * Math.cos(min / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 160 * Math.sin(time[1] / 60 * 2 * Math.PI), 300 - 160 * Math.cos(time[1] / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 4;
   cv.stroke();
   cv.beginPath(); // 1.Pathで描画を開始する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
   cv.strokeStyle = "red";
-  cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 160 * Math.sin(time[2] / 60 * 2 * Math.PI), 300 - 160 * Math.cos(time[2] / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 1;
   cv.stroke();
 
   //AM,PM
-  if (hour < 12) {
+  if (time[0] < 12) {
     txt = 'AM';
   } else {
     txt = 'PM';
