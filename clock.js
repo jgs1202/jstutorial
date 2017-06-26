@@ -51,7 +51,7 @@ function case3() {
 }
 
 function Drug() {
-  Timer2 = setInterval('getCoo()', 2000);
+  Timer2 = setInterval(getCoo.bind(this, event), 2000)
   console.log("mousedown")
 }
 
@@ -64,7 +64,7 @@ function getCoo(e) {
   console.log("getCooを実行");
   var rect = e.target.getBoundingClientRect();
   var x, y;
-  x = e.clientX - rect.left;
+  x = e.clientX - rect.left
   y = e.clientY - rect.top;
   console.log(`${x},${y}`);
   var theta = new Array(4);
@@ -82,6 +82,8 @@ function getCoo(e) {
       go = i;
     }
   }
+
+console.log(go)
   if (theta[go] < 10) {
     cv.clearRect(0, 0, 1000, 600);
     drawClock(time[0], time[1], time[2]);
@@ -389,7 +391,7 @@ function case3() {
   getCoo(x,y);
   tanclick = (y-300)/(x-500)
   if(tanHour-tanclick<10){
-    
+
   }
 
 }
