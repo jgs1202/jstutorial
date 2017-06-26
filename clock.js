@@ -50,7 +50,7 @@ function case3() {
 }
 
 function Drug() {
-  Timer2 = setInterval('getCoo()', 2000);
+  Timer2 = setInterval(getCoo.bind(this, event), 2000);
   console.log("mousedown")
 }
 
