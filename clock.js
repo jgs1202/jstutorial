@@ -84,6 +84,10 @@ function getCoo(e) {
   }
 
 console.log(go)
+<<<<<<< HEAD
+=======
+console.los(theta[0])
+>>>>>>> 9aec890b8cfffefb4ca242003f895afc0d056db7
   if (theta[go] < 10) {
     cv.clearRect(0, 0, 1000, 600);
     drawClock(time[0], time[1], time[2]);
