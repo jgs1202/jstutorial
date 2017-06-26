@@ -81,7 +81,6 @@ function getCoo(e) {
       go = i;
     }
   }
-
 console.log(go)
   if (theta[go] < 10) {
     cv.clearRect(0, 0, 1000, 600);
