@@ -1,10 +1,11 @@
-<<<<<<< HEAD
 var select = document.getElementById('mode')
 var cvs = document.getElementById("cv")
 var cv = document.getElementById("cv").getContext("2d")
 var ctx = document.getElementById("cv").getContext("2d")
 var Timer;
 var time = new Array(3);
+
+
 
 function Click() {
   console.log(select.selectedIndex)
@@ -27,6 +28,7 @@ function Click() {
 }
 
 function case1() {
+  concole.log("This is case one.")
   Timer = setInterval('reload()', 995)
   document.getElementById("inputForm").style.display = "none"
 }
@@ -36,6 +38,7 @@ function case2() {
   clearInterval(Timer);
   document.getElementById("inputForm").style.display = "block"
 }
+
 var Timer2;
 
 function case3() {
@@ -281,7 +284,6 @@ function reload() {
   cv.fill();
 }
 //ここまでreload関数
-=======
 select = document.getElementById('mode')
 var cv = document.getElementById("cv").getContext("2d")
 var ctx = document.getElementById("cv").getContext("2d")
@@ -553,4 +555,3 @@ function reload() {
   cv.fill();
 }
 //ここまでreload関数
->>>>>>> 799ec5ebc32e5eeb51b10aef4c90429f844dbfef
