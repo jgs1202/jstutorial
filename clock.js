@@ -21,8 +21,8 @@ function Click() {
       console.log('case2です。');
       break;
     case 3:
-      case3();
       console.log("case3です。");
+      case3();
       break;
   }
 }
@@ -42,6 +42,7 @@ function case2() {
 var Timer2;
 
 function case3() {
+  console.log("case3 is impremented.")
   time[0] = 10;
   time[1] = 8;
   time[2] = 36;
@@ -54,13 +55,11 @@ function case3() {
 }
 
 function Drug() {
-  Timer2 = setInterval(getCoo.bind(this, event), 2000)
-  console.log("mousedown")
+  Timer2 = setInterval(getCoo.bind(this, event), 500)
 }
 
 function Stop() {
   clearInterval(Timer2);
-  console.log("mouseup")
 }
 
 function getCoo(e) {
@@ -71,24 +70,45 @@ function getCoo(e) {
   y = e.clientY - rect.top;
   console.log(`${x},${y}`);
   var theta = new Array(4);
+  var difTheta = new Array(3)
   var go = 0;
-  theta[3] = Math.atan((y - 300) / (x - 500));
-  theta[0] = Math.tan(time[0] / 12 * 2 * Math.PI);
-  theta[1] = Math.tan(time[1] / 60 * 2 * Math.PI);
-  theta[2] = Math.tan(time[2] / 60 * 2 * Math.PI);
+  theta[3] = Math.atan2(x - 500, 300 - y) * 180 / Math.PI;
+  if (theta[3] < 0) {
+    theta[3] = theta[3] + 360;
+  }
+  console.log(`theta(mouse) is ${theta[3]}`)
+  theta[0] = time[0] / 12 * 360;
+  theta[1] = time[1] / 60 * 360;
+  theta[2] = time[2] / 60 * 360;
+  console.log(theta[0], theta[1], theta[2])
   var i;
   for (i = 0; i < 3; i++) {
-    theta[i] = Math.abs(theta[3] - theta[i]);
+    difTheta[i] = Math.abs(theta[3] - theta[i]);
   }
   for (i = 1; i < 3; i++) {
-    if (theta[i] > theta[go]) {
+    if (difTheta[i] < difTheta[go]) {
       go = i;
     }
   }
-console.log(go)
-console.log(theta[0])
-  if (theta[go] < 10) {
+  console.log(`go is ${go}`)
+  console.log(`theta[go] is ${theta[go]}`)
+  if (difTheta[go] < 10) {
+    theta[go]=theta[3]
+    switch (go) {
+      case 0:
+        time[0] = theta[0] / 360 * 12
+        break;
+      case 1:
+        time[1] = theta[1] / 360 * 60
+        break;
+      case 2:
+        time[2] = theta[2] / 360 * 60
+        break;
+    }
+    console.log("drow")
     cv.clearRect(0, 0, 1000, 600);
+    console.log("clear")
+    console.log(time[0], time[1], time[2])
     drawClock(time[0], time[1], time[2]);
   }
 }
@@ -260,277 +280,6 @@ function reload() {
 
   //AM,PM
   if (time[0] < 12) {
-    txt = 'AM';
-  } else {
-    txt = 'PM';
-  }
-  ctx.strokeStyle = 'black';
-  ctx.strokeText(txt, 485, 370);
-
-  //真ん中の丸(黒)
-  cv.beginPath()
-  cv.arc(500, 300, 5, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke();
-
-  //真ん中の丸
-  cv.beginPath()
-  cv.arc(500, 300, 2, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'white'
-  cv.lineWidth = 2;
-  cv.fillStyle = 'white';
-  cv.stroke();
-  cv.fill();
-}
-//ここまでreload関数
-select = document.getElementById('mode')
-var cv = document.getElementById("cv").getContext("2d")
-var ctx = document.getElementById("cv").getContext("2d")
-var Timer, sec, min, hour
-
-function Click() {
-  console.log(select.selectedIndex)
-  switch (select.selectedIndex) {
-    case 0:
-      break;
-    case 1:
-      case1();
-      console.log("case1です。");
-      break
-    case 2:
-      case2();
-      console.log('case2です。');
-      break
-    case 3:
-      case3();
-      console.log("case3です。");
-      break
-  }
-}
-
-function case1() {
-  Timer = setInterval('reload()', 995)
-  document.getElementById("inputForm").style.display = "none"
-}
-
-function case2() {
-  cv.clearRect(0, 0, 1000, 600)
-  clearInterval(Timer);
-  document.getElementById("inputForm").style.display = "block"
-}
-
-function case3() {
-  cv.clearRect(0, 0, 1000, 600)
-  clearInterval(Timer)
-  document.getElementById("inputForm").style.display = "none"
-  hour = 10
-  min = 9
-  sec = 37
-  //文字盤を描写
-  var i = 0;
-  var txt = 0;
-  ctx.font = "20px Arial"; //フォントにArial,40px,斜体を指定
-  ctx.fillStyle = "black"; //塗り潰し色を緑に
-  for (i = 1; i < 13; i++) {
-    txt = i;
-    ctx.fillText(txt, 490 + 170 * Math.sin(txt * Math.PI / 6), 310 - 170 * Math.cos(txt * Math.PI / 6)); //テキストを塗り潰しで描画
-  }
-
-  // 周りの枠線
-  cv.beginPath()
-  cv.arc(500, 300, 200, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke()
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 100 * Math.sin((hour / 12 + min / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((hour / 12 + min / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 8;
-  cv.stroke(); // 4.Canvas上に描画する
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(min / 60 * 2 * Math.PI), 300 - 160 * Math.cos(min / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 4;
-  cv.stroke();
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.strokeStyle = "red";
-  cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 1;
-  cv.stroke();
-
-  //AM,PM
-  if (hour < 12) {
-    txt = 'AM';
-  } else {
-    txt = 'PM';
-  }
-  ctx.strokeStyle = 'black';
-  ctx.strokeText(txt, 485, 370);
-
-  //真ん中の丸(黒)
-  cv.beginPath()
-  cv.arc(500, 300, 5, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke();
-
-  //真ん中の丸
-  cv.beginPath()
-  cv.arc(500, 300, 2, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'white'
-  cv.lineWidth = 2;
-  cv.fillStyle = 'white';
-  cv.stroke();
-  cv.fill();
-
-  var tanHour, tanMin, tanSec
-  tanHour = gettheta(hour)
-  tanMin = gettheta(min)
-  tanSec = gettheta(sec)
-  var x, y, tanclick;
-  getCoo(x,y);
-  tanclick = (y-300)/(x-500)
-  if(tanHour-tanclick<10){
-
-  }
-
-}
-
-function getCoo(x, y) {
-  var w = cv.width
-  var h = cv.height
-
-  function onClick(e) {
-    var rect = e.target.getBoundingClientRect();
-    x = e.clientX - rect.left
-    y = e.clientY - rect.top
-  }
-}
-
-function gettheta(time) {
-  if (time == hour) {
-    return Math.tan(time / 12) * 2 * Math.PI
-  } else if (time == min) {
-    return Math.tan(time / 60) * 2 * Math.PI
-  } else if (time == sec) {
-    return Math.tan(time / 60) * 2 * Math.PI
-  }
-
-  //キャンバス上でクリックされたところの座標を取得、そのtanを各針のtanと比較
-}
-
-function toClock() {
-  hour = document.eg.Hour.value
-  min = document.eg.Minute.value
-  sec = document.eg.Second.value
-  console.log(`${hour}時${min}分${sec}秒`)
-  //文字盤を描写
-  var i = 0;
-  var txt = 0;
-  ctx.font = "20px Arial"; //フォントにArial,40px,斜体を指定
-  ctx.fillStyle = "black"; //塗り潰し色を緑に
-  for (i = 1; i < 13; i++) {
-    txt = i;
-    ctx.fillText(txt, 490 + 170 * Math.sin(txt * Math.PI / 6), 310 - 170 * Math.cos(txt * Math.PI / 6)); //テキストを塗り潰しで描画
-  }
-
-  // 周りの枠線
-  cv.beginPath()
-  cv.arc(500, 300, 200, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke()
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 100 * Math.sin((hour / 12 + min / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((hour / 12 + min / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 8;
-  cv.stroke(); // 4.Canvas上に描画する
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(min / 60 * 2 * Math.PI), 300 - 160 * Math.cos(min / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 4;
-  cv.stroke();
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.strokeStyle = "red";
-  cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 1;
-  cv.stroke();
-
-  //AM,PM
-  if (hour < 12) {
-    txt = 'AM';
-  } else {
-    txt = 'PM';
-  }
-  ctx.strokeStyle = 'black';
-  ctx.strokeText(txt, 485, 370);
-
-  //真ん中の丸(黒)
-  cv.beginPath()
-  cv.arc(500, 300, 5, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke();
-
-  //真ん中の丸
-  cv.beginPath()
-  cv.arc(500, 300, 2, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'white'
-  cv.lineWidth = 2;
-  cv.fillStyle = 'white';
-  cv.stroke();
-  cv.fill();
-}
-
-//ここからreload関数
-function reload() {
-  cv.clearRect(0, 0, 1000, 600)
-  console.log("関数reloadが実行されました。")
-  //文字盤を描写
-  var i = 0;
-  var txt = 0;
-  ctx.font = "20px Arial"; //フォントにArial,40px,斜体を指定
-  ctx.fillStyle = "black"; //塗り潰し色を緑に
-  for (i = 1; i < 13; i++) {
-    txt = i;
-    ctx.fillText(txt, 490 + 170 * Math.sin(txt * Math.PI / 6), 310 - 170 * Math.cos(txt * Math.PI / 6)); //テキストを塗り潰しで描画
-  }
-
-  // 周りの枠線
-  cv.beginPath()
-  cv.arc(500, 300, 200, 0, 2 * Math.PI, true)
-  cv.strokeStyle = 'black'
-  cv.lineWidth = 5
-  cv.stroke()
-
-  // 現在のローカル時間が格納された、Date オブジェクトを作成する
-  var date_obj = new Date();
-  sec = date_obj.getSeconds();
-  min = date_obj.getMinutes();
-  hour = date_obj.getHours();
-
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 100 * Math.sin((hour / 12 + min / 60 / 12) * 2 * Math.PI), 300 - 100 * Math.cos((hour / 12 + min / 60 / 12) * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 8;
-  cv.stroke(); // 4.Canvas上に描画する
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(min / 60 * 2 * Math.PI), 300 - 160 * Math.cos(min / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 4;
-  cv.stroke();
-  cv.beginPath(); // 1.Pathで描画を開始する
-  cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.strokeStyle = "red";
-  cv.lineTo(500 + 160 * Math.sin(sec / 60 * 2 * Math.PI), 300 - 160 * Math.cos(sec / 60 * 2 * Math.PI)); // 3.指定座標まで線を引く
-  cv.lineWidth = 1;
-  cv.stroke();
-
-  //AM,PM
-  if (hour < 12) {
     txt = 'AM';
   } else {
     txt = 'PM';
