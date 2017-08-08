@@ -122,7 +122,7 @@ function move(e) {
       time[1]=60*htom;
       if(time[1]>60){
         time[1]=time[1]-60
-      }
+            }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
       break;
@@ -132,8 +132,8 @@ function move(e) {
         time[1]=60+time[1]
       }
       if(time[1]>60){
-        time[1]=time[1]-1
-
+        time[1]=time[1]-60
+        time[0]=time[0]+1
       }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
@@ -145,6 +145,7 @@ function move(e) {
       }
       if(time[2]>60){
         time[2]=time[2]-60
+        time[1]=time[1]+1
       }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
