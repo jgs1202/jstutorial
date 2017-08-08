@@ -29,7 +29,7 @@ function Click() {
 }
 
 function case1() {
-  concole.log("This is case one.")
+  console.log("This is case one.")
   Timer = setInterval('reload()', 995)
   document.getElementById("inputForm").style.display = "none"
 }
@@ -97,6 +97,7 @@ function Drug(e) {
     go = 3
   }
   cvs.addEventListener('mousemove', move, false);
+  cvs.addEventListener('mouseup', mup, false);
 }
 
 function move(e) {
@@ -132,6 +133,7 @@ function move(e) {
       }
       if(time[1]>60){
         time[1]=time[1]-1
+
       }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
