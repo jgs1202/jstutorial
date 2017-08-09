@@ -2,7 +2,7 @@ var select = document.getElementById('mode')
 var cvs = document.getElementById("cv")
 var cv = document.getElementById("cv").getContext("2d")
 var ctx = document.getElementById("cv").getContext("2d")
-var Timer, rect, x, y, go, htom;
+var Timer, rect, x, y, go, htom, preTime;
 var time = new Array(3);
 var theta = new Array(4);
 var difTheta = new Array(3)
@@ -69,17 +69,20 @@ function Drug(e) {
   rect = e.target.getBoundingClientRect();
   x = e.clientX - rect.left
   y = e.clientY - rect.top;
-  console.log(`${x},${y}`);
+  console.log(`x,yは${x},${y}`);
   go = 0;
   theta[3] = Math.atan2(x - 500, 300 - y) * 180 / Math.PI;
   if (theta[3] < 0) {
     theta[3] = theta[3] + 360;
   }
   console.log(`theta(mouse) is ${theta[3]}`)
-  theta[0] = time[0] / 12 * 360 + time[1] / 60 * 360 / 12;
+  console.log(`theta is ${theta[0]}, ${theta[1]}, ${theta[2]}`)
+  theta[0] = (time[0]-12) / 12 * 360 + time[1] / 60 * 360 / 12;
+  if(theta[0]<0){
+    theta[0]=theta[0]+360
+  }
   theta[1] = time[1] / 60 * 360;
   theta[2] = time[2] / 60 * 360;
-  console.log(time[0], time[1], time[2])
   var i;
   for (i = 0; i < 3; i++) {
     difTheta[i] = Math.abs(theta[3] - theta[i]);
@@ -89,7 +92,6 @@ function Drug(e) {
       go = i;
     }
   }
-  console.log(`go is ${go}`)
   console.log(`difTheta[go] is ${difTheta[go]}`)
   if (difTheta[go] < 10) {
     go = go
@@ -101,51 +103,81 @@ function Drug(e) {
 }
 
 function move(e) {
+  console.log(`時刻は${time[0]},${time[1]},${time[2]}`)
   var rect = e.target.getBoundingClientRect();
   x = e.clientX - rect.left
   y = e.clientY - rect.top;
   theta[3] = Math.atan2(x - 500, 300 - y) * 180 / Math.PI;
   theta[go] = theta[3]
-  console.log(theta[3])
   htom = 0;
   switch (go) {
     case 0:
       time[0] = theta[0] / 360 * 12
-      if(time[0]<0){
-        time[0]=12+time[0]
+      if (time[0] < 0) {
+        time[0] = 24 + time[0]
       }
-      if(time[0]>12){
-        time[0]=time[0]-1
+      if (time[0] > 23) {
+        time[0] = time[0] - 24
       }
-      htom = parseFloat("0."+(String(time[0])).split(".")[1])
-      time[0]=Math.floor(time[0])
-      time[1]=60*htom;
-      if(time[1]>60){
-        time[1]=time[1]-60
-            }
+      htom = parseFloat("0." + (String(time[0])).split(".")[1])
+      time[0] = Math.floor(time[0])
+      time[1] = 60 * htom;
+      if (time[1] > 60) {
+        time[1] = time[1] - 60
+      }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
       break;
     case 1:
+      pretime = time[1]
       time[1] = theta[1] / 360 * 60
-      if(time[1]<0){
-        time[1]=60+time[1]
+      if (time[1] > 60) {
+        time[1] = time[1] - 60
       }
-      if(time[1]>60){
-        time[1]=time[1]-60
-        time[0]=time[0]+1
+      if (time[1] < 0) {
+        time[1] = time[1] + 60
+      }
+      if (time[0] < 0) {
+        time[0] = 24 + time[0]
+      }
+      if (time[0] > 24) {
+        time[0] = time[0] - 24
+      }
+      if (pretime - time[1] > 50) {
+        time[0] = time[0] + 1
+      }
+      if (time[1] - pretime > 50) {
+        time[0] = time[0] - 1
       }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
       break;
     case 2:
+      pretime = time[2]
       time[2] = theta[2] / 360 * 60
-      if(time[2]<0){
-        time[2]=60+time[2]
+      if (time[2] < 0) {
+        time[2] = time[2] + 60
       }
-      if(time[2]>60){
-        time[2]=time[2]-60
-        time[1]=time[1]+1
+      if (time[2] > 60) {
+        time[2] = time[2] - 60
+      }
+      if (time[1] > 60) {
+        time[1] = time[1] - 60
+      }
+      if (time[1] < 0) {
+        time[1] = time[1] + 60
+      }
+      if (time[0] < 0) {
+        time[0] = 24 + time[0]
+      }
+      if (time[0] > 24) {
+        time[0] = time[0] - 24
+      }
+      if (pretime - time[2] > 50) {
+        time[1] = 1 + time[1]
+      }
+      if (time[2] - pretime > 50) {
+        time[1] = time[1] - 1
       }
       cv.clearRect(0, 0, 1000, 600);
       drawClock(time[0], time[1], time[2]);
@@ -153,7 +185,7 @@ function move(e) {
     case 3:
       break;
   }
-  console.log(time[go])
+  console.log(`time[go] is ${time[go]}`)
   cvs.addEventListener('mouseup', mup, false);
 }
 
@@ -185,7 +217,7 @@ function drawClock(h, m, s) {
   cv.lineWidth = 8;
   cv.stroke(); // 4.Canvas上に描画する
   cv.moveTo(500, 300); // 2.描画する位置を指定する
-  cv.lineTo(500 + 160 * Math.sin(( m / 60 + s /60/60)*2* Math.PI), 300 - 160 * Math.cos(( m / 60 + s /60/60)* 2 * Math.PI)); // 3.指定座標まで線を引く
+  cv.lineTo(500 + 160 * Math.sin((m / 60) * 2 * Math.PI), 300 - 160 * Math.cos((m / 60) * 2 * Math.PI)); // 3.指定座標まで線を引く
   cv.lineWidth = 4;
   cv.stroke();
   cv.moveTo(500, 300); // 2.描画する位置を指定する
