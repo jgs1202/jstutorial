@@ -52,6 +52,7 @@ function case3() {
   drawClock(time[0], time[1], time[2]);
   document.getElementById("inputForm").style.display = "none"
   cvs.addEventListener('mousedown', Drug, false);
+  cvs.addEventListener('touchstart', Drug, false);
   //  cvs.addEventListener('mouseup', Stop, false);
 }
 
@@ -99,7 +100,9 @@ function Drug(e) {
     go = 3
   }
   cvs.addEventListener('mousemove', move, false);
+  cvs.addEventListener('touchmove', move, false);
   cvs.addEventListener('mouseup', mup, false);
+  cvs.addEventListener('touchend', mup, false);
 }
 
 function move(e) {
@@ -187,12 +190,15 @@ function move(e) {
   }
   console.log(`time[go] is ${time[go]}`)
   cvs.addEventListener('mouseup', mup, false);
+  cvs.addEventListener('touchend', mup, false);
 }
 
 function mup(e) {
   console.log("mouseup")
   cvs.removeEventListener('mousemove', move, false);
+  cvs.removeEventListener('touchmove', move, false);
   cvs.removeEventListener('mouseup', mup, false);
+  cvs.removeEventListener('touchend', mup, false);
 }
 
 function drawClock(h, m, s) {
